@@ -4,26 +4,31 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Reactとの接続のためにCORSを許可
+# CORS設定（あとで React から叩けるように）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React開発用URL
+    allow_origins=["http://localhost:3000"],  # React開発用
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-class Post(BaseModel):
+# TODO1件分の型定義
+class Todo(BaseModel):
+    id: int
     title: str
-    body: str
+    done: bool = False
 
-posts = []
+# 仮のデータベース（メモリ上）
+todos: list[Todo] = []
 
-@app.get("/posts")
-def get_posts():
-    return posts
+# 一覧取得
+@app.get("/todos")
+def get_todos():
+    return todos
 
-@app.post("/posts")
-def create_post(post: Post):
-    posts.append(post)
-    return post
+# 新規追加
+@app.post("/todos")
+def create_todo(todo: Todo):
+    todos.append(todo)
+    return todo
