@@ -29,6 +29,19 @@ function App() {
       .catch(err => console.error(err));
   };
 
+  // TODO を削除
+  const deleteTodo = (id) => {
+    axios.delete(`http://127.0.0.1:8000/todos/${id}`)
+      .then(() => {
+        // 削除した TODO を除いた配列に更新
+        setTodos(todos.filter((todo) => todo.id !== id));
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("削除に失敗しました");
+      });
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>TODO リスト</h1>
@@ -46,7 +59,15 @@ function App() {
 
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.title}</li>
+          <li key={todo.id}>
+            {todo.title}
+            <button
+              style={{ marginLeft: "8px" }}
+              onClick={() => deleteTodo(todo.id)}
+            >
+              削除
+            </button>
+          </li>
         ))}
       </ul>
     </div>
